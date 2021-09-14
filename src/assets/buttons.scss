@@ -20,6 +20,9 @@
     &_w {
         width: 60px;
         font-size: 2em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
     &:hover {
         -webkit-animation-play-state: paused;

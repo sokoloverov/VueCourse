@@ -8,11 +8,11 @@
     <select :class="[$style.field]" v-model="category">
       <option disabled value="">Выберите вид расходов</option>
       <option
-        v-for="(category, index) in categories"
+        v-for="(category, index) in getCategoryList"
         :key="index"
-        :value="category.value"
+        :value="category"
       >
-        {{ category.label }}
+        {{ category }}
       </option>
     </select>
     <input
@@ -25,38 +25,14 @@
 </template>
  
 <script>
+import { mapActions, mapGetters } from "vuex";
+
 export default {
   data() {
     return {
       date: "",
       category: "",
       value: "",
-      categories: [
-        {
-          label: "Еда",
-          value: "Еда",
-        },
-        {
-          label: "Транспорт",
-          value: "Транспорт",
-        },
-        {
-          label: "Спорт",
-          value: "Спор",
-        },
-        {
-          label: "Обучение",
-          value: "Обучение",
-        },
-        {
-          label: "Налоги",
-          value: "Налоги",
-        },
-        {
-          label: "Коммунальные платежи",
-          value: "Коммунальные платежи",
-        },
-      ],
     };
   },
   computed: {
@@ -67,8 +43,18 @@ export default {
       const y = today.getFullYear();
       return `${d}.${m}.${y}`;
     },
+    ...mapGetters(["getCategoryList"]),
+  },
+  // actions: {
+  //   ...mapActions(["loadCategories"]),
+  // },
+  mounted() {
+    if (!this.getCategoryList.length) {
+      this.loadCategories();
+    }
   },
   methods: {
+    ...mapActions(["loadCategories"]),
     onSaveClick() {
       const data = {
         date: this.date || this.getCurrentDate,

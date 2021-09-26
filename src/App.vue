@@ -45,6 +45,7 @@ export default {
     ...mapActions(["fetchData", "addNewData"]),
 
     dataAdd(data) {
+      //this.commit("addDataString", data);
       this.$store.commit("addDataString", data);
       //this.$store.dispatch("addNewData", data);не работает?
       //this.paymentsList = [data, ...this.paymentsList];

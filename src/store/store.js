@@ -5,7 +5,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        paymentsList: []
+        paymentsList: [],
+        categoryList: []
     },
     mutations: {
         setPaymentListData(state, payload) {
@@ -13,13 +14,17 @@ export default new Vuex.Store({
         },
         addDataString(state, payload) {
             state.paymentsList = [payload, ...state.paymentsList];
-        }
+        },
+        setCategories(state, payload) {
+            state.categoryList.push(...payload);
+        },
     },
     getters: {
         getPaymentsList: state => state.paymentsList,
         getPaymentsListSum: state => {
             return state.paymentsList.reduce((res, cur) => res + cur.value, 0);
-        }
+        },
+        getCategoryList: state => state.categoryList
     },
     actions: {
         async fetchData({ commit }) {
@@ -71,11 +76,19 @@ export default new Vuex.Store({
                         value: 369.22,
                     },]),
                         reject();
-                }, 1000)
+                }, 200)
             }).then(res => { commit('setPaymentListData', res) })
         },
-        addNewData(commit, payload) {
+        addNewData(commit, payload) {//пока не работает
             commit('addDataString', payload);
+        },
+        async loadCategories({ commit }) {
+            await new Promise((resolve, reject) => {
+                setTimeout(() => {// имитируем работу с сетью
+                    resolve(["Еда", "Транспорт", "Спорт", "Обучение", "Налоги", "Коммунальные платежи"]),
+                        reject();
+                }, 200)
+            }).then(res => { commit('setCategories', res) })
         }
     }
 })

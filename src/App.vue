@@ -30,7 +30,12 @@ import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "App",
-  components: { PaymentsDisplay, AddPaymentForm, AddButton, Pagination },
+  components: {
+    PaymentsDisplay,
+    AddPaymentForm,
+    AddButton,
+    Pagination,
+  },
   data() {
     return {
       showAddPaymantForm: false,
@@ -45,10 +50,8 @@ export default {
     ...mapActions(["fetchData", "addNewData"]),
 
     dataAdd(data) {
-      //this.commit("addDataString", data);
-      this.$store.commit("addDataString", data);
-      //this.$store.dispatch("addNewData", data);не работает?
-      //this.paymentsList = [data, ...this.paymentsList];
+      this.addNewData(data);
+      //this.$store.commit("addDataString", data);
       this.showAddPaymantForm = false;
       this.showOnePage(1); //показ конечной страницы списка, куда добавляется дата В КОНЕЦ массива! Конечная страница - первая в представлении!
     },

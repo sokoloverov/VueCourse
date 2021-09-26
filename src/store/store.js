@@ -79,8 +79,8 @@ export default new Vuex.Store({
                 }, 200)
             }).then(res => { commit('setPaymentListData', res) })
         },
-        addNewData(commit, payload) {//пока не работает
-            commit('addDataString', payload);
+        addNewData(context, payload) {
+            context.commit('addDataString', payload);
         },
         async loadCategories({ commit }) {
             await new Promise((resolve, reject) => {

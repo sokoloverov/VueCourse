@@ -9,12 +9,9 @@
         <div v-show="showAddPaymantForm">
           <AddPaymentForm @addNewPayment="dataAdd" />
         </div>
-        <PaymentsDisplay
-          :items="paymentsPage"
-          :firstIndexOnPage="firstIndexOnPage"
-        />
+        <PaymentsDisplay :pageIndex="lastIndexOnPage" />
         <Pagination
-          :listLength="paymentsList.length"
+          :listLength="getPaymentsList.length"
           :countOnPage="countOnPage"
           @choosePage="showOnePage"
         />
@@ -28,72 +25,29 @@ import PaymentsDisplay from "./components/PaymentsDisplay";
 import AddPaymentForm from "./components/AddPaymentForm.vue";
 import AddButton from "./components/AddButton.vue";
 import Pagination from "./components/Pagination.vue";
+//import { mapMutations, mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "App",
   components: { PaymentsDisplay, AddPaymentForm, AddButton, Pagination },
   data() {
     return {
-      paymentsList: [],
-      paymentsPage: [],
       showAddPaymantForm: false,
-      firstIndexOnPage: 0,
+      lastIndexOnPage: 0,
       countOnPage: 5,
       currentPage: 1,
     };
   },
   methods: {
-    fetchData() {
-      return [
-        {
-          date: "15.03.2020",
-          category: "Еда",
-          value: 289.88,
-        },
-        {
-          date: "24.04.2020",
-          category: "Транспорт",
-          value: 112,
-        },
-        {
-          date: "24.08.2020",
-          category: "Спорт",
-          value: 3041,
-        },
-        {
-          date: "28.10.2020",
-          category: "Еда",
-          value: 444.28,
-        },
-        {
-          date: "14.12.2020",
-          category: "Обучение",
-          value: 5500,
-        },
-        {
-          date: "4.03.2021",
-          category: "Транспорт",
-          value: 1096,
-        },
-        {
-          date: "28.06.2021",
-          category: "Еда",
-          value: 207.53,
-        },
-        {
-          date: "24.07.2021",
-          category: "Транспорт",
-          value: 86,
-        },
-        {
-          date: "26.08.2021",
-          category: "Еда",
-          value: 369.22,
-        },
-      ];
-    },
+    //...mapMutations(["setPaymentListData"]), //синтаксис через массив
+    //...mapMutations({myMutattion: "setPaymentListData"}),//синтаксис через объект, еси надо новое имя дать мутации
+    ...mapActions(["fetchData", "addNewData"]),
+
     dataAdd(data) {
-      this.paymentsList = [data, ...this.paymentsList];
+      this.$store.commit("addDataString", data);
+      //this.$store.dispatch("addNewData", data);не работает?
+      //this.paymentsList = [data, ...this.paymentsList];
       this.showAddPaymantForm = false;
       this.showOnePage(1); //показ конечной страницы списка, куда добавляется дата В КОНЕЦ массива! Конечная страница - первая в представлении!
     },
@@ -102,16 +56,22 @@ export default {
     },
     showOnePage(page) {
       this.currentPage = page;
-      this.firstIndexOnPage = this.countOnPage * (page - 1);
-      this.paymentsPage = this.paymentsList.slice(
-        this.firstIndexOnPage,
-        this.firstIndexOnPage + 5
-      );
+      this.lastIndexOnPage = this.countOnPage * (page - 1);
     },
   },
+  computed: {
+    ...mapGetters(["getPaymentsList", "getPaymentsListSum"]),
+  },
   created() {
-    this.paymentsList = this.fetchData();
-    this.paymentsPage = this.paymentsList.slice(0, 5);
+    //this.paymentsList = this.fetchData();
+    //this.paymentsPage = this.paymentsList.slice(0, 5);
+    this.fetchData();
+  },
+  mounted() {
+    //this.$store.commit("setPaymentListData", this.fetchData());
+    //this.setPaymentListData(this.fetchData());
+    //this.paymentsPage = this.getPaymentsList.slice(0, 5);
+    //this.paymentsList = this.getPaymentsList;
   },
 };
 </script>

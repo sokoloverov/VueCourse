@@ -10,8 +10,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in items" :key="index">
-          <td scope="row">{{ index + firstIndexOnPage + 1 }}</td>
+        <tr v-for="(item, index) in getList(getPaymentsList)" :key="index">
+          <td scope="row">{{ index + pageIndex + 1 }}</td>
           <td>{{ item.date }}</td>
           <td>{{ item.category }}</td>
           <td>{{ item.value | formatPriseRU }}</td>
@@ -22,15 +22,26 @@
 </template>
  
 <script>
+import { mapGetters } from "vuex";
 export default {
+  data() {
+    return {
+      firstIndexOnPage: 0,
+    };
+  },
   props: {
-    items: {
-      type: Array,
-      default: () => [],
-    },
-    firstIndexOnPage: {
+    pageIndex: {
       type: Number,
       default: 1,
+    },
+  },
+  mounted() {},
+  computed: {
+    ...mapGetters(["getPaymentsList"]),
+  },
+  methods: {
+    getList(list) {
+      return list.slice(this.pageIndex, this.pageIndex + 5);
     },
   },
   filters: {
@@ -49,7 +60,7 @@ export default {
   margin-bottom: 10px;
 }
 .table {
-  min-width: 420px;
+  min-width: 500px;
   table-layout: fixed;
   width: 50%;
   margin-bottom: 20px;

@@ -46,11 +46,15 @@ export default {
       this.currentPage = value;
     },
     moveLeft() {
-      if (this.currentPage > 1) this.currentPage--;
+      if (this.currentPage > 1) {
+        this.currentPage--;
+        this.choosePage(this.currentPage);
+      }
     },
     moveRight() {
       if (this.currentPage < Math.ceil(this.listLength / this.countOnPage))
         this.currentPage++;
+      this.choosePage(this.currentPage);
     },
   },
 };

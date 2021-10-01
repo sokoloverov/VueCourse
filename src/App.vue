@@ -3,79 +3,27 @@
     <div>
       <header>
         <div :class="[$style.title]">Жизнь того стоит?</div>
+        <br />
+        <router-link to="/dashboard">Dashboadr</router-link>
+        <router-link to="/about">About</router-link>
+        <router-link to="/404">404</router-link>
       </header>
       <main>
-        <AddButton @buttonClick="showForm" />
-        <div v-show="showAddPaymantForm">
-          <AddPaymentForm @addNewPayment="dataAdd" />
-        </div>
-        <PaymentsDisplay :pageIndex="lastIndexOnPage" />
-        <Pagination
-          :listLength="getPaymentsList.length"
-          :countOnPage="countOnPage"
-          @choosePage="showOnePage"
-        />
+        <router-view></router-view>
       </main>
     </div>
   </div>
 </template>
 
-<script>
-import PaymentsDisplay from "./components/PaymentsDisplay";
-import AddPaymentForm from "./components/AddPaymentForm.vue";
-import AddButton from "./components/AddButton.vue";
-import Pagination from "./components/Pagination.vue";
-//import { mapMutations, mapGetters } from "vuex";
-import { mapGetters, mapActions } from "vuex";
 
+<script>
 export default {
   name: "App",
-  components: {
-    PaymentsDisplay,
-    AddPaymentForm,
-    AddButton,
-    Pagination,
-  },
   data() {
-    return {
-      showAddPaymantForm: false,
-      lastIndexOnPage: 0,
-      countOnPage: 5,
-      currentPage: 1,
-    };
-  },
-  methods: {
-    //...mapMutations(["setPaymentListData"]), //синтаксис через массив
-    //...mapMutations({myMutattion: "setPaymentListData"}),//синтаксис через объект, еси надо новое имя дать мутации
-    ...mapActions(["fetchData", "addNewData"]),
-
-    dataAdd(data) {
-      this.addNewData(data);
-      //this.$store.commit("addDataString", data);
-      this.showAddPaymantForm = false;
-      this.showOnePage(1); //показ конечной страницы списка, куда добавляется дата В КОНЕЦ массива! Конечная страница - первая в представлении!
-    },
-    showForm() {
-      this.showAddPaymantForm = true;
-    },
-    showOnePage(page) {
-      this.currentPage = page;
-      this.lastIndexOnPage = this.countOnPage * (page - 1);
-    },
-  },
-  computed: {
-    ...mapGetters(["getPaymentsList", "getPaymentsListSum"]),
-  },
-  created() {
-    //this.paymentsList = this.fetchData();
-    //this.paymentsPage = this.paymentsList.slice(0, 5);
-    this.fetchData();
+    return {};
   },
   mounted() {
-    //this.$store.commit("setPaymentListData", this.fetchData());
-    //this.setPaymentListData(this.fetchData());
-    //this.paymentsPage = this.getPaymentsList.slice(0, 5);
-    //this.paymentsList = this.getPaymentsList;
+    //this.$router.push({ name: "dashboard" }); //стартова страница после перезагрузки
   },
 };
 </script>

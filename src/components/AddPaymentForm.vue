@@ -31,9 +31,17 @@ export default {
   data() {
     return {
       date: "",
-      category: "",
-      value: "",
+      //category: "",
+      //value: "",
     };
+  },
+  props: {
+    value: {
+      default: "0",
+    },
+    category: {
+      default: "",
+    },
   },
   computed: {
     getCurrentDate() {
@@ -51,6 +59,7 @@ export default {
   mounted() {
     if (!this.getCategoryList.length) {
       this.loadCategories();
+      console.log(this.category);
     }
   },
   methods: {

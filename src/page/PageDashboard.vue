@@ -4,8 +4,8 @@
     <div v-show="showAddPaymantForm">
       <AddPaymentForm
         @addNewPayment="dataAdd"
-        :value="price1"
-        :category="category1"
+        :value1="price1"
+        :category2="category1"
       />
     </div>
     <PaymentsDisplay :pageIndex="lastIndexOnPage" />
@@ -71,9 +71,9 @@ export default {
       this.price1 = this.pageForm.match(regPrice);
       this.price1 = this.price1[0];
       this.category1 = this.$route.params.addForm;
-      console.log(this.price1, this.category1);
+      //console.log(this.price1, this.category1);
       this.showForm();
-    } else this.showAddPaymantForm = false;
+    }
   },
 };
 </script>

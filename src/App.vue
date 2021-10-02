@@ -23,7 +23,8 @@ export default {
     return {};
   },
   mounted() {
-    //this.$router.push({ name: "dashboard" }); //стартова страница после перезагрузки
+    if(this.$route.path !== '/dashboard') this.$router.push({ name: "dashboard" }); 
+    //стартова страница после перезагрузки
   },
 };
 </script>

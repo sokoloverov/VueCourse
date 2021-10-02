@@ -31,15 +31,15 @@ export default {
   data() {
     return {
       date: "",
-      //category: "",
-      //value: "",
+      category: "",
+      value: "",
     };
   },
   props: {
-    value: {
+    value1: {
       default: "0",
     },
-    category: {
+    category2: {
       default: "",
     },
   },
@@ -52,14 +52,13 @@ export default {
       return `${d}.${m}.${y}`;
     },
     ...mapGetters(["getCategoryList"]),
-  },
-  // actions: {
-  //   ...mapActions(["loadCategories"]),
-  // },
-  mounted() {
+      },
+   mounted() {
     if (!this.getCategoryList.length) {
       this.loadCategories();
-      console.log(this.category);
+      //console.log(this.category);
+      this.category = this.category2;
+      this.value=this.value1;
     }
   },
   methods: {

@@ -15,6 +15,13 @@ export default new Vuex.Store({
         addDataString(state, payload) {
             state.paymentsList = [payload, ...state.paymentsList];
         },
+        deletePaymentListData(state, payload) {
+            state.paymentsList.splice(payload, 1);
+        },
+        changePaymentListData(state, payload) {
+            state.paymentsList.splice(payload.id, 1, payload);
+            //console.log(state, payload);
+        },
         setCategories(state, payload) {
             state.categoryList.push(...payload);
         },
@@ -81,6 +88,12 @@ export default new Vuex.Store({
         },
         addNewData(context, payload) {
             context.commit('addDataString', payload);
+        },
+        deleteData(context, payload) {
+            context.commit('deletePaymentListData', payload);
+        },
+        changeData(context, payload) {
+            context.commit('changePaymentListData', payload);
         },
         async loadCategories({ commit }) {
             await new Promise((resolve, reject) => {

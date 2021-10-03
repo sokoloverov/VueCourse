@@ -20,7 +20,12 @@
       placeholder="Сумма расходов"
       v-model="value"
     />
-    <button @click="onSaveClick" :class="[$style.buttonAdd]">Добавить +</button>
+    <div :class="[$style.buttonBlock]">
+      <button @click="cancel" :class="[$style.buttonAdd]">Отменить</button>
+      <button @click="onSaveClick" :class="[$style.buttonAdd]">
+        {{ nameButton }}
+      </button>
+    </div>
   </div>
 </template>
  
@@ -33,14 +38,18 @@ export default {
       date: "",
       category: "",
       value: "",
+      nameButton: "Добавить",
     };
   },
   props: {
     value1: {
-      default: "0",
+      default: "",
     },
     category2: {
       default: "",
+    },
+    buttonFlag: {
+      default: false,
     },
   },
   computed: {
@@ -52,13 +61,17 @@ export default {
       return `${d}.${m}.${y}`;
     },
     ...mapGetters(["getCategoryList"]),
-      },
-   mounted() {
+  },
+  beforeMount() {
+    this.category = this.category2;
+    this.value = this.value1;
+    this.buttonFlag
+      ? (this.nameButton = "Изменить")
+      : (this.nameButton = "Добавить");
+  },
+  mounted() {
     if (!this.getCategoryList.length) {
       this.loadCategories();
-      //console.log(this.category);
-      this.category = this.category2;
-      this.value=this.value1;
     }
   },
   methods: {
@@ -70,6 +83,11 @@ export default {
         value: +this.value,
       };
       if (+this.value) this.$emit("addNewPayment", data);
+      this.value = ""; //обнуление значений, почему-то сами не обнуляются
+      this.category = "";
+    },
+    cancel() {
+      this.$emit("cancel");
     },
   },
 };
@@ -95,6 +113,9 @@ export default {
   background-color: antiquewhite;
   box-shadow: 0px 2px 4px 0px rgba(34, 60, 80, 0.2);
   outline: none;
+}
+.buttonBlock {
+  display: flex;
 }
 .buttonAdd {
   align-self: flex-end;

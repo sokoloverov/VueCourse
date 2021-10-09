@@ -1,36 +1,53 @@
 <template>
-  <div :class="[$style.wrapper]">
-    <table :class="[$style.table]">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
+  <v-container>
+    <!-- <div :class="[$style.wrapper]"> -->
+    <!-- <table :class="[$style.table]"> -->
+    <!-- <thead>
+        <tr> -->
+    <v-row>
+      <v-col :cols="1">#</v-col>
+      <v-col :cols="3">Дата</v-col>
+      <v-col :cols="4">Вид расходов</v-col>
+      <v-col :cols="3">Стоимость</v-col>
+      <v-col :cols="1">Изменить</v-col>
+    </v-row>
+    <!-- <th scope="col">#</th>
           <th scope="col">Дата</th>
           <th scope="col">Вид расходов</th>
           <th scope="col">Стоимость</th>
-          <th scope="col">Изменить</th>
-        </tr>
+          <th scope="col">Изменить</th> -->
+    <!-- </tr>
       </thead>
-      <tbody>
-        <tr v-for="(item, index) in getList(getPaymentsList)" :key="index">
-          <td scope="row">{{ index + pageIndex + 1 }}</td>
-          <td>{{ item.date }}</td>
-          <td>{{ item.category }}</td>
-          <td>{{ item.value | formatPriseRU }}</td>
-          <td @click="changes(item, index + pageIndex, index)">...</td>
-          <transition name="fade">
-            <Modal
-              v-if="position === index"
-              :name="modalShown"
-              :changePosition="indexChange"
-              @edit="changeData"
-            />
-          </transition>
-        </tr>
-      </tbody>
-    </table>
-    <!-- <button @click="shownPaymentsForm">Show Payments Form</button>
+      <tbody> -->
+    <v-row v-for="(item, index) in getList(getPaymentsList)" :key="index">
+      <v-col :cols="1">{{ index + pageIndex + 1 }}</v-col>
+      <v-col :cols="3">{{ item.date }}</v-col>
+      <v-col :cols="4"
+        ><v-icon>{{ mdi(item.category) }}</v-icon
+        >{{ item.category }}</v-col
+      >
+      <v-col :cols="3">{{ item.value | formatPriseRU }}</v-col>
+      <v-col :cols="1" @click="changes(item, index + pageIndex, index)"
+        >...</v-col
+      >
+      <div :class="[$style.wrapper1]">
+        <transition name="fade">
+          <Modal
+            v-show="position === index"
+            :name="modalShown"
+            :changePosition="indexChange"
+            @edit="changeData"
+          />
+        </transition>
+      </div>
+      <!-- </tr>
+      </tbody> -->
+      <!-- </table> -->
+      <!-- <button @click="shownPaymentsForm">Show Payments Form</button>
     <button @click="closePaymentsForm">Close Payments Form</button> -->
-  </div>
+      <!-- </div> -->
+    </v-row>
+  </v-container>
 </template>
  
 <script>
@@ -89,6 +106,25 @@ export default {
     onClose() {
       this.modalShown = "";
     },
+    mdi(data) {
+      switch (data) {
+        case "Еда":
+          return "mdi-food";
+        case "Транспорт":
+          return "mdi-train-car";
+        case "Спорт":
+          return "mdi-basketball";
+        case "Обучение":
+          return "mdi-school-outline";
+        case "Налоги":
+          return "mdi-cash";
+        case "Коммуналка":
+          return "mdi-paper-roll";
+        default:
+          "mdi-plus";
+          break;
+      }
+    },
   },
   filters: {
     formatPriseRU(value) {
@@ -136,5 +172,8 @@ export default {
 :global(.fade-enter),
 :global(.fade-leave-to) {
   opacity: 0;
+}
+.wrapper1 {
+  position: relative;
 }
 </style>

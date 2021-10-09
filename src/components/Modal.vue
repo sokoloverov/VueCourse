@@ -1,5 +1,5 @@
 <template>
-  <div v-if="name">
+  <div v-if="name" class="window">
     <!-- <header>{{ name }}</header> -->
     <!-- <AddPaymentForm v-if="name === 'paymentform'"/> -->
     <MenuData
@@ -51,3 +51,10 @@ export default {
   },
 };
 </script>
+
+<style lang="css">
+.window {
+  position: absolute;
+  left: -50px;
+}
+</style>

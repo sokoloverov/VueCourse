@@ -1,32 +1,41 @@
 <template>
-  <div :class="[$style.wrapper]">
-    <input
-      :class="[$style.field]"
-      placeholder="Дата проставляется автоматически, если поле не заполнять"
-      v-model="date"
-    />
-    <select :class="[$style.field]" v-model="category">
-      <option disabled value="">Выберите вид расходов</option>
-      <option
-        v-for="(category, index) in getCategoryList"
-        :key="index"
-        :value="category"
-      >
-        {{ category }}
-      </option>
-    </select>
-    <input
-      :class="[$style.field]"
-      placeholder="Сумма расходов"
-      v-model="value"
-    />
-    <div :class="[$style.buttonBlock]">
-      <button @click="cancel" :class="[$style.buttonAdd]">Отменить</button>
-      <button @click="onSaveClick" :class="[$style.buttonAdd]">
-        {{ nameButton }}
-      </button>
-    </div>
-  </div>
+  <v-dialog v-model="showF">
+    <v-card class="text-left pa-8">
+      <!-- <div :class="[$style.wrapper]"> -->
+      <v-text-field
+        label="Дата проставляется автоматически, если поле не заполнять"
+        v-model="date"
+      ></v-text-field>
+
+      <select :class="[$style.field]" v-model="category">
+        <option disabled value="">Выберите вид расходов</option>
+        <option
+          v-for="(category, index) in getCategoryList"
+          :key="index"
+          :value="category"
+        >
+          {{ category }}
+        </option>
+      </select>
+
+      <v-text-field label="Сумма расходов" v-model="value"></v-text-field>
+      <div :class="[$style.buttonBlock]">
+        <v-btn color="teal" dark @click="cancel" :class="[$style.buttonAdd]"
+          >Отменить</v-btn
+        >
+        <v-btn
+          color="teal"
+          dark
+          @click="onSaveClick"
+          :class="[$style.buttonAdd]"
+        >
+          {{ nameButton }}
+        </v-btn>
+      </div>
+      <!-- </div> -->
+    </v-card>
+  </v-dialog>
+  <!-- </v-dialog> -->
 </template>
  
 <script>
@@ -39,6 +48,7 @@ export default {
       category: "",
       value: "",
       nameButton: "Добавить",
+      showWindow: false,
     };
   },
   props: {
@@ -51,6 +61,7 @@ export default {
     buttonFlag: {
       default: false,
     },
+    showF: Boolean,
   },
   computed: {
     getCurrentDate() {
@@ -63,6 +74,7 @@ export default {
     ...mapGetters(["getCategoryList"]),
   },
   beforeMount() {
+    this.showWindow = this.showF;
     this.category = this.category2;
     this.value = this.value1;
     this.buttonFlag
@@ -70,9 +82,9 @@ export default {
       : (this.nameButton = "Добавить");
   },
   mounted() {
-    if (!this.getCategoryList.length) {
-      this.loadCategories();
-    }
+    // if (!this.getCategoryList.length) {
+    //   this.loadCategories();
+    // }
   },
   methods: {
     ...mapActions(["loadCategories"]),

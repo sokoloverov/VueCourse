@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-app-bar density="compact">
     <div :class="[$style.carousel, $style.button]">
       <button :class="[$style.button]" @click="moveLeft">&#9664;</button>
       <div v-for="page in makePagesArray()" :key="page">
@@ -15,8 +15,7 @@
       </div>
       <button :class="[$style.button]" @click="moveRight">&#9654;</button>
     </div>
-    <p>Количество записей: {{ listLength }}</p>
-  </div>
+  </v-app-bar>
 </template>
 
 <script>

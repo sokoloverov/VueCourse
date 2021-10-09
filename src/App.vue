@@ -1,25 +1,32 @@
 <template>
-  <div id="app">
-    <div>
-      <header>
-        <div :class="[$style.title]">Жизнь того стоит?</div>
-        <br />
-        <div :class="[$style.link]">
-          <router-link to="/dashboard" :class="[$style.but]"
-            >Dashboadr</router-link
-          >
-          <router-link to="/about" :class="[$style.but]">About</router-link>
-          <router-link to="/404" :class="[$style.but]">404</router-link>
-        </div>
-      </header>
-      <main>
-        <router-view></router-view>
-      </main>
-      <!-- <transition name="fade">
+  <v-app id="app">
+    <v-app-bar app flat>
+      <v-btn plain :ripple="false" to="/dashboard">Dashboadr</v-btn>
+      <!-- <router-link to="/dashboard" :class="[$style.but]"
+          >Dashboadr</router-link
+        > -->
+      <v-btn plain :ripple="false" to="/about">About</v-btn>
+      <!-- <router-link to="/about" :class="[$style.but]">About</router-link> -->
+      <v-btn plain :ripple="false" to="/404">404</v-btn>
+      <!-- <router-link to="/404" :class="[$style.but]">404</router-link> -->
+    </v-app-bar>
+    <v-main app
+      ><div>
+        <header>
+          <div class="text-h5 text-sm-h3">Жизнь того стоит?</div>
+          <!-- <div :class="[$style.title]">Жизнь того стоит?</div> -->
+          <!-- <br /> -->
+          <div :class="[$style.link]"></div>
+        </header>
+        <main>
+          <router-view></router-view>
+        </main>
+        <!-- <transition name="fade">
         <Modal v-if="modalShown" :name="modalShown" />
       </transition> -->
-    </div>
-  </div>
+      </div></v-main
+    >
+  </v-app>
 </template>
 
 

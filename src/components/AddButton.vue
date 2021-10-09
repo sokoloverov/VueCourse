@@ -1,9 +1,12 @@
 <template>
-  <div>
-    <button :class="[$style.buttonAdd]" type="button" @click="onButtonClick">
-      Добавить новый расход +
-    </button>
-  </div>
+  <v-container>
+    <v-btn color="teal" dark type="button" @click="onButtonClick">
+      Добавить новый расход<v-icon>mdi-abacus</v-icon>
+    </v-btn>
+    <!-- <button :class="[$style.buttonAdd]" type="button" @click="onButtonClick">
+        Добавить новый расход +
+      </button> -->
+  </v-container>
 </template>
 
 <script>

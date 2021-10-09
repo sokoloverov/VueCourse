@@ -6,6 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         paymentsList: [],
+        //paymentsListIDSave: [], список для хранения добавленных id которые ранее были загружены
         categoryList: []
     },
     mutations: {
@@ -14,6 +15,17 @@ export default new Vuex.Store({
         },
         addDataString(state, payload) {
             state.paymentsList = [payload, ...state.paymentsList];
+            //альтернатива state.paymentsList.push(...payload) здесь в конец, если хотим дозагружать страницы для просмотра
+            //const newIDS = payload.map(obj => obj.id) сохраняем все новые id 
+            //const uniqIDS = newIDS.filter(id => state.paymentsListIDSave.indexOf(id) < 0) все что вернет -1 - уникально: получаем уникальные идентификаторы в новом списке
+            //еще проще двух предыдущая строка const newUniqObjects = payload.map(obj => {
+            //     return state.paymentsListIDSave.indexOf(obj.id) < 0
+            // }) если id встречается, убираем его из результирующего массива
+            //и только новые записи добалвляем в paymentsList
+            //state.paymentsList.push(...newUniqObjects)
+            //обновляем paymentsListIDSave: []
+            // const uniqIDS = newUniqObj.map(obj => obj.id)
+            // state.paymentsListIDSave.push(...newUniqObj)
         },
         deletePaymentListData(state, payload) {
             state.paymentsList.splice(payload, 1);
@@ -86,6 +98,29 @@ export default new Vuex.Store({
                 }, 200)
             }).then(res => { commit('setPaymentListData', res) })
         },
+
+        // альтернативная версия по забору страниц массива с данными:
+        //fetchData({commit}, page)....
+        // setTimeout(() => {
+        // const items = storage['page${page}'] эта запись означает page с номером, который во втором аргументе функции "page"
+        // resolve(items)
+        // }, 100)
+        // сам массив вида
+        // const storage = {
+        //     "page1": [
+        //       { "id": 1, "date": "20.03.2020", "category": "Food", "value": 169 },
+        //       { "id": 2, "date": "21.03.2020", "category": "Navigation", "value": 50 },
+        //       { "id": 3, "date": "22.03.2020", "category": "Sport", "value": 450 }
+        //     ],
+        //     "page2": [
+        //       { "id": 4, "date": "23.03.2020", "category": "Entertaiment", "value": 969 },
+        //       { "id": 5, "date": "24.03.2020", "category": "Education", "value": 1500 },
+        //       { "id": 6, "date": "25.03.2020", "category": "Food", "value": 200 }
+        //     ],
+        // }
+        //тогда при пагинации в функции вызова fetchDat(ставим номер текущей страницы) и он вызывает эти данные на конкретную страницу
+
+
         addNewData(context, payload) {
             context.commit('addDataString', payload);
         },
@@ -98,7 +133,7 @@ export default new Vuex.Store({
         async loadCategories({ commit }) {
             await new Promise((resolve, reject) => {
                 setTimeout(() => {// имитируем работу с сетью
-                    resolve(["Еда", "Транспорт", "Спорт", "Обучение", "Налоги", "Коммунальные платежи"]),
+                    resolve(["Еда", "Транспорт", "Спорт", "Обучение", "Налоги", "Коммуналка"]),
                         reject();
                 }, 200)
             }).then(res => { commit('setCategories', res) })

@@ -26,7 +26,7 @@
         ><v-icon>{{ mdi(item.category) }}</v-icon
         >{{ item.category }}</v-col
       >
-      <v-col :cols="3">{{ item.value | formatPriseRU }}</v-col>
+      <v-col :cols="3">{{ rub(item.value) }}</v-col>
       <v-col :cols="1" @click="changes(item, index + pageIndex, index)"
         >...</v-col
       >
@@ -125,9 +125,7 @@ export default {
           break;
       }
     },
-  },
-  filters: {
-    formatPriseRU(value) {
+    rub(value) {
       return new Intl.NumberFormat("ru-RU", {
         style: "currency",
         currency: "RUB",

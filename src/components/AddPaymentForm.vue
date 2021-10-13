@@ -1,7 +1,6 @@
 <template>
   <v-dialog v-model="showF">
     <v-card class="text-left pa-8">
-      <!-- <div :class="[$style.wrapper]"> -->
       <v-text-field
         label="Дата проставляется автоматически, если поле не заполнять"
         v-model="date"
@@ -32,10 +31,8 @@
           {{ nameButton }}
         </v-btn>
       </div>
-      <!-- </div> -->
     </v-card>
   </v-dialog>
-  <!-- </v-dialog> -->
 </template>
  
 <script>
@@ -72,8 +69,12 @@ export default {
       return `${d}.${m}.${y}`;
     },
     ...mapGetters(["getCategoryList"]),
+    ff() {
+      this.rewrite();
+      return this.buttonFlag;
+    },
   },
-  beforeMount() {
+  created() {
     this.showWindow = this.showF;
     this.category = this.category2;
     this.value = this.value1;
@@ -81,25 +82,34 @@ export default {
       ? (this.nameButton = "Изменить")
       : (this.nameButton = "Добавить");
   },
-  mounted() {
-    // if (!this.getCategoryList.length) {
-    //   this.loadCategories();
-    // }
-  },
   methods: {
     ...mapActions(["loadCategories"]),
+    rewrite() {
+      if (this.buttonFlag) {
+        this.showWindow = this.showF;
+        this.category = this.category2;
+        this.value = this.value1;
+        this.buttonFlag
+          ? (this.nameButton = "Изменить")
+          : (this.nameButton = "Добавить");
+      }
+    },
     onSaveClick() {
       const data = {
         date: this.date || this.getCurrentDate,
         category: this.category,
         value: +this.value,
       };
-      if (+this.value) this.$emit("addNewPayment", data);
-      this.value = ""; //обнуление значений, почему-то сами не обнуляются
-      this.category = "";
+      if (+this.value) {
+        this.$emit("addNewPayment", data);
+        this.value = ""; //обнуление значений, почему-то сами не обнуляются
+        this.category = "";
+      }
     },
     cancel() {
       this.$emit("cancel");
+      this.value = ""; //обнуление значений, почему-то сами не обнуляются
+      this.category = "";
     },
   },
 };

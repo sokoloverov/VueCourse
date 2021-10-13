@@ -22,7 +22,7 @@
         />
         <br />
         <v-app-bar>
-          <p>Всего трат: {{ getPaymentsListSum | formatPriseRU }}</p>
+          <p>Всего трат: {{ rub(getPaymentsListSum) }}</p>
           <p>&emsp; количество записей: {{ getPaymentsList.length }}</p>
         </v-app-bar>
         <Pagination
@@ -35,9 +35,9 @@
 
       <v-col class="width1">
         <BaseChart :chartData="chartData" :options="options" />{{
-          getChartData(getCategoryList)
-        }}</v-col
-      >
+          getChartData(getCategoryList, getOnlyValue)
+        }}
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -69,13 +69,13 @@ export default {
       category1: "", //vue требовал непрямой передачи props
       changeIndex: 0, //какой элемент редактируем или удаляем
       whatWeDo: false, //добавляем или редакируем
-      r: 0,
       chartData: {
+        //данные графика-бублика
         labels: [],
         datasets: [
           {
-            label: "Data One",
-            data: [40, 20, 12, 39, 10, 40],
+            label: "Расходы",
+            data: [],
             backgroundColor: [
               "rgb(255, 99, 132)",
               "rgb(54, 162, 235)",
@@ -86,20 +86,30 @@ export default {
             ],
           },
         ],
-      }, //для графика
+      },
       options: { responsive: true, maintainAspectRatio: false }, //для графика
     };
   },
   methods: {
-    ...mapActions(["fetchData", "addNewData", "changeData", "loadCategories"]),
+    ...mapActions([
+      "fetchData",
+      "addNewData",
+      "changeData",
+      "loadCategories",
+      "setValueList",
+      "changeCategoriesValue",
+    ]),
     dataAdd(data) {
       if (this.whatWeDo) {
         this.$set(data, "id", this.changeIndex);
         this.changeData(data);
         this.whatWeDo = false;
+        this.changeCategoriesValue();
       } else {
         this.addNewData(data);
         this.showOnePage(1); //показ конечной страницы списка, куда добавляется дата В КОНЕЦ массива! Конечная страница - первая в представлении!
+        this.whatWeDo = false;
+        this.changeCategoriesValue();
       }
       this.showAddPaymantForm = false;
     },
@@ -113,6 +123,7 @@ export default {
     },
     cancel() {
       this.showAddPaymantForm = false;
+      this.whatWeDo = false;
     },
     showForm() {
       this.price1 = 0;
@@ -123,13 +134,25 @@ export default {
       this.currentPage = page;
       this.lastIndexOnPage = this.countOnPage * (page - 1);
     },
-    getChartData(data) {
-      this.chartData.labels = [...data];
-      //console.log("data", data);
+    getChartData(categoryName, categoryValue) {
+      this.chartData.labels = [...categoryName];
+      Object.assign(this.chartData.datasets[0].data, categoryValue);
+    },
+    rub(value) {
+      return new Intl.NumberFormat("ru-RU", {
+        style: "currency",
+        currency: "RUB",
+      }).format(value);
     },
   },
   computed: {
-    ...mapGetters(["getPaymentsList", "getPaymentsListSum", "getCategoryList"]),
+    ...mapGetters([
+      "getPaymentsList",
+      "getPaymentsListSum",
+      "getCategoryList",
+      "getCategoryValue",
+      "getOnlyValue",
+    ]),
   },
   created() {
     this.fetchData();
@@ -137,7 +160,6 @@ export default {
       this.loadCategories();
     }
   },
-  beforeMount() {},
   mounted() {
     // if (/add/.test(this.$route.path)) {
     //   this.pageForm = this.$route.fullPath;
@@ -147,15 +169,6 @@ export default {
     //   this.category1 = this.$route.params.addForm;
     //   this.showForm();
     // }
-    //this.chartData.labels = [...this.getCategoryList];
-  },
-  filters: {
-    formatPriseRU(value) {
-      return new Intl.NumberFormat("ru-RU", {
-        style: "currency",
-        currency: "RUB",
-      }).format(value);
-    },
   },
 };
 </script>

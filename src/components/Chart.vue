@@ -14,17 +14,9 @@ export default {
       default: null,
     },
   },
-  data() {
-    return {
-      dataForChart: {},
-    };
-  },
-  created() {
-    this.dataForChart = Object.assign(this.chartData);
-    //console.log("chartData", this.dataForChart.labels);
-  },
+
   mounted() {
-    this.renderChart(this.dataForChart, this.options);
+    this.renderChart(this.chartData, this.options);
   },
 };
 </script>

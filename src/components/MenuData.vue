@@ -14,12 +14,13 @@ export default {
   },
   props: { changePosition: Number },
   methods: {
-    ...mapActions(["deleteData"]),
+    ...mapActions(["deleteData", "changeCategoriesValue"]),
     edit() {
       this.$emit("editClick");
     },
     remove() {
       this.deleteData(this.changePosition);
+      this.changeCategoriesValue();
       this.$modal.close();
     },
   },

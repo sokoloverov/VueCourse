@@ -7,7 +7,9 @@ export default new Vuex.Store({
     state: {
         paymentsList: [],
         //paymentsListIDSave: [], список для хранения добавленных id которые ранее были загружены
-        categoryList: []
+        categoryList: [],
+        categoryValue: [],//массив ключ - значение: вид расходов и их сумма
+        onlyValue: []//чистый одномерный массив с суммами затрат по каждой статье расходов
     },
     mutations: {
         setPaymentListData(state, payload) {
@@ -32,18 +34,30 @@ export default new Vuex.Store({
         },
         changePaymentListData(state, payload) {
             state.paymentsList.splice(payload.id, 1, payload);
-            //console.log(state, payload);
         },
         setCategories(state, payload) {
             state.categoryList.push(...payload);
         },
+        setCategoriesValue(state) {
+            state.categoryValue = [];
+            state.onlyValue = [];
+            for (let v of state.categoryList) {
+                let k = 0;
+                let c = state.paymentsList.filter(e => e.category === v);
+                c.forEach(e => { k += e.value; });
+                state.categoryValue.push({ category: v, sum: k });
+                state.onlyValue.push(k);
+            }
+        }
     },
     getters: {
         getPaymentsList: state => state.paymentsList,
         getPaymentsListSum: state => {
             return state.paymentsList.reduce((res, cur) => res + cur.value, 0);
         },
-        getCategoryList: state => state.categoryList
+        getCategoryList: state => state.categoryList,
+        getCategoryValue: state => state.categoryValue,
+        getOnlyValue: state => state.onlyValue
     },
     actions: {
         async fetchData({ commit }) {
@@ -52,47 +66,47 @@ export default new Vuex.Store({
                     resolve([{
                         date: "15.03.2020",
                         category: "Еда",
-                        value: 289.88,
+                        value: 222,
                     },
                     {
                         date: "24.04.2020",
                         category: "Транспорт",
-                        value: 112,
+                        value: 167,
                     },
                     {
                         date: "24.08.2020",
                         category: "Спорт",
-                        value: 3041,
+                        value: 3097,
                     },
                     {
                         date: "28.10.2020",
                         category: "Еда",
-                        value: 444.28,
+                        value: 404,
                     },
                     {
                         date: "14.12.2020",
                         category: "Обучение",
-                        value: 5500,
+                        value: 5000,
                     },
                     {
                         date: "4.03.2021",
                         category: "Транспорт",
-                        value: 1096,
+                        value: 343,
                     },
                     {
                         date: "28.06.2021",
                         category: "Еда",
-                        value: 207.53,
+                        value: 75,
                     },
                     {
                         date: "24.07.2021",
                         category: "Транспорт",
-                        value: 86,
+                        value: 65,
                     },
                     {
                         date: "26.08.2021",
                         category: "Еда",
-                        value: 369.22,
+                        value: 521,
                     },]),
                         reject();
                 }, 200)
@@ -137,6 +151,10 @@ export default new Vuex.Store({
                         reject();
                 }, 200)
             }).then(res => { commit('setCategories', res) })
+                .then(() => commit('setCategoriesValue'))
+        },
+        changeCategoriesValue({ commit }) {
+            commit('setCategoriesValue');
         }
     }
 })
